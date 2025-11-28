@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>可拖动的坐标系与动态标签</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        /* 整体布局：左右分栏 */
+        .page {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 30px;
+            gap: 20px;
+        }
+
+        /* 1. 坐标系容器样式 */
+        #coordinate-system {
+            width: 900px;
+            height: 600px;
+            border: 2px solid #333;
+            position: relative;
+            background-color: #ffffff;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+            overflow: hidden; 
+            display: flex;
+        }
+
+        /* 2. 坐标轴样式 */
+        .axis {
+            position: absolute;
+            background-color: #aaa;
+        }
+
+
+        /* 2.1. 纵轴 (Y-axis) */
+        #y-axis {
+            width: 1px;
+            height: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        /* 2.2. 横轴 (X-axis) */
+        #x-axis {
+            width: 100%;
+            height: 1px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        /* 3. 标签 (Tag) 样式 */
+        .tag {
+            position: absolute;
+            cursor: grab;
+            display: inline-block;
+            padding: 5px 10px;
+            line-height: normal;
+            text-align: center;
+            border-radius: 8px; 
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+            font-family: Arial, sans-serif;
+            z-index: 10;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            white-space: nowrap; 
+            transform: translate(-50%, -50%); 
+        }
+
+        /* 4. 坐标轴标签 (Axis Labels) 样式 */
+        .axis-label {
+            position: absolute;
+            color: #333;
+            font-size: 14px;
+            font-weight: bold;
+            padding: 5px;
+            background-color: #fff;
+            border: 1px solid transparent;
+            cursor: pointer;
+        }
+        .axis-label:focus {
+            border: 1px dashed #007bff;
+            outline: none;
+        }
+        #label-y-pos { top: 5px; left: 50%; transform: translateX(-50%); }
+        #label-y-neg { bottom: 5px; left: 50%; transform: translateX(-50%); }
+        #label-x-neg { left: 5px; top: 50%; transform: translateY(-50%); }
+        #label-x-pos { right: 5px; top: 50%; transform: translateY(-50%); }
+
+        /* 5. Tag 管理系统样式 - 简化设计 */
+        #tag-system {
+            width: 300px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: flex; 
+            flex-direction: column; 
+        }
+        
+        /* 标签列表容器 */
+        #tag-list-wrapper {
+            flex-grow: 1; 
+            overflow-y: auto; /* 允许列表过长时滚动 */
+        }
+
+        /* Tag 添加区域 - 单个添加 */
+        #add-tag-area {
+            display: flex;
+            gap: 5px;
+            padding-top: 10px;
+            border-top: 1px solid #eee; /* 分隔线 */
+            margin-bottom: 10px; /* 与下方批量添加区域的间距 */
+        }
+        #new-tag-text {
+            flex-grow: 1;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        
+        /* '+' 按钮样式 */
+        #add-tag-btn {
+            padding: 8px 15px;
+            background-color: #ddd; 
+            color: #333;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        #add-tag-btn:hover {
+            background-color: #ccc;
+        }
+
+        /* 新增的批量添加区域样式 */
+        #bulk-add-area {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        #bulk-tag-text {
+            flex-grow: 1;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            resize: vertical; 
+            font-family: inherit; 
+        }
+        #add-bulk-btn {
+            padding: 8px 15px;
+            background-color: #ddd; 
+            color: #333;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        #add-bulk-btn:hover {
+            background-color: #ccc;
+        }
+
+
+        /* Tag 列表 */
+        #tag-list-container {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        #tag-list-container li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px dashed #eee;
+        }
+        #tag-list-container li:last-child {
+            border-bottom: none;
+        }
+        
+        /* '-' 删除按钮样式 */
+        .delete-btn {
+            background-color: transparent; 
+            color: #888; 
+            border: 1px solid #ddd; 
+            padding: 2px 8px; 
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            line-height: 1.2;
+            width: 25px; 
+            text-align: center;
+        }
+        .delete-btn:hover {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <div id="coordinate-system">
+            <div id="x-axis" class="axis"></div>
+            <div id="y-axis" class="axis"></div>
+
+            <div id="label-y-pos" class="axis-label" contenteditable="true">积极</div>
+            <div id="label-y-neg" class="axis-label" contenteditable="true">消极</div>
+            <div id="label-x-neg" class="axis-label" contenteditable="true">平静</div>
+            <div id="label-x-pos" class="axis-label" contenteditable="true">激进</div>
+        </div>
+
+        <div id="tag-system">
+            <div id="tag-list-wrapper">
+                <ul id="tag-list-container">
+                    </ul>
+            </div>
+            
+            <div id="bulk-add-area">
+                <textarea id="bulk-tag-text" rows="4" placeholder="支持批量添加标签，每行一个。例如：
+标签F
+标签G
+标签H"></textarea>
+                <button id="add-bulk-btn">+</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // --- 全局配置 ---
+        const INITIAL_TAG_CONTENTS = ['A', 'B', 'C', 'D', 'E'];
+        const BOUNDS_PADDING = 50; 
+        
+        // --- 状态数据 ---
+        let tagsData = []; 
+        
+        // --- DOM 元素 ---
+        const container = document.getElementById('coordinate-system');
+        const tagListContainer = document.getElementById('tag-list-container');
+        const newTagText = document.getElementById('new-tag-text');
+        const addTagBtn = document.getElementById('add-tag-btn');
+        const bulkTagText = document.getElementById('bulk-tag-text'); // 新增
+        const addBulkBtn = document.getElementById('add-bulk-btn');     // 新增
+        
+        let containerWidth = 0;
+        let containerHeight = 0;
+
+        /**
+         * 生成一个三位数的不重复 ID 字符串
+         */
+        function generateUniqueId() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let id = '';
+            for (let i = 0; i < 3; i++) {
+                id += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return 'tag-' + id;
+        }
+
+        /**
+         * 计算一个随机的、在拖动边界内的初始 CSS 位置
+         */
+        function getInitialRandomPosition() {
+            if (containerWidth === 0 || containerHeight === 0) {
+                return { left: 300, top: 200 };
+            }
+            
+            const effectiveWidth = containerWidth - 2 * BOUNDS_PADDING;
+            const effectiveHeight = containerHeight - 2 * BOUNDS_PADDING;
+
+            const randX = Math.random() * effectiveWidth;
+            const randY = Math.random() * effectiveHeight;
+
+            const initialLeftPadded = BOUNDS_PADDING + randX;
+            const initialTopPadded = BOUNDS_PADDING + randY;
+
+            return { left: initialLeftPadded, top: initialTopPadded };
+        }
+        
+        /**
+         * 渲染一个新的标签到坐标系中 (只用于新增标签)
+         */
+        function renderNewCoordinateTag(data) {
+            const tag = document.createElement('div');
+            tag.className = 'tag';
+            tag.id = data.id;
+            tag.textContent = data.content;
+
+            tag.style.left = `${data.left}px`;
+            tag.style.top = `${data.top}px`;
+            
+            container.appendChild(tag);
+            
+            makeDraggable(tag);
+        }
+
+        /**
+         * 渲染 tag-system 中的标签列表
+         */
+        function renderTagList() {
+            tagListContainer.innerHTML = '';
+            tagsData.forEach(data => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <span>${data.content}</span>
+                    <button class="delete-btn" data-tag-id="${data.id}">x</button>
+                `; 
+                tagListContainer.appendChild(li);
+            });
+            
+            document.querySelectorAll('.delete-btn').forEach(button => {
+                button.addEventListener('click', handleDeleteTag);
+            });
+        }
+
+        /**
+         * 单个添加标签的处理器
+         */
+        function handleAddTag() {
+            const content = newTagText.value.trim();
+            if (content === '') {
+                alert('标签内容不能为空！');
+                return;
+            }
+            
+            const newId = generateUniqueId();
+            const position = getInitialRandomPosition();
+            
+            const newTagData = { 
+                id: newId, 
+                content: content, 
+                left: position.left,
+                top: position.top
+            };
+            
+            tagsData.push(newTagData);
+            
+            renderNewCoordinateTag(newTagData);
+            renderTagList();
+            
+            newTagText.value = '';
+            newTagText.focus();
+        }
+
+        /**
+         * 批量添加标签的处理器 (新增)
+         */
+        function handleBulkAddTag() {
+            const content = bulkTagText.value.trim();
+            if (content === '') {
+                alert('批量标签内容不能为空！');
+                return;
+            }
+
+            // 按行分割内容，并过滤掉空行
+            const lines = content.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+
+            if (lines.length === 0) {
+                alert('请输入有效的标签内容，每行一个。');
+                return;
+            }
+
+            let newTagsAdded = 0;
+            lines.forEach(tagContent => {
+                // 如果内容为空字符串，则跳过
+                if (tagContent.length === 0) return;
+
+                const newId = generateUniqueId();
+                const position = getInitialRandomPosition();
+                
+                const newTagData = { 
+                    id: newId, 
+                    content: tagContent, 
+                    left: position.left,
+                    top: position.top
+                };
+                
+                tagsData.push(newTagData);
+                renderNewCoordinateTag(newTagData); // 渲染每个新标签
+                newTagsAdded++;
+            });
+            
+            // 重新渲染右侧列表，并清空 textarea
+            if (newTagsAdded > 0) {
+                renderTagList();
+                bulkTagText.value = ''; // 自动清空 textarea
+                newTagText.focus(); 
+            }
+        }
+
+        /**
+         * 删除标签的处理器
+         */
+        function handleDeleteTag(e) {
+            const tagId = e.target.getAttribute('data-tag-id');
+            
+            document.getElementById(tagId)?.remove();
+            
+            tagsData = tagsData.filter(tag => tag.id !== tagId);
+            
+            renderTagList();
+        }
+
+        /**
+         * 使单个标签可拖动
+         */
+        function makeDraggable(tag) {
+            let isDragging = false;
+            let offsetX, offsetY;
+            
+            const findTagData = (id) => tagsData.find(d => d.id === id);
+
+            tag.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                offsetX = e.clientX - tag.getBoundingClientRect().left;
+                offsetY = e.clientY - tag.getBoundingClientRect().top;
+                e.preventDefault();
+                tag.style.zIndex = 100;
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+
+                let newLeft = e.clientX - offsetX;
+                let newTop = e.clientY - offsetY;
+
+                const containerRect = container.getBoundingClientRect();
+                let relativeLeft = newLeft - containerRect.left;
+                let relativeTop = newTop - containerRect.top;
+                
+                const tagWidth = tag.offsetWidth;
+                const tagHeight = tag.offsetHeight;
+
+                // --- 边界检测 ---
+                
+                const minX = BOUNDS_PADDING + tagWidth / 2;
+                const maxX = containerWidth - BOUNDS_PADDING - tagWidth / 2;
+                relativeLeft = Math.max(minX, relativeLeft);
+                relativeLeft = Math.min(maxX, relativeLeft);
+                
+                const minY = BOUNDS_PADDING + tagHeight / 2;
+                const maxY = containerHeight - BOUNDS_PADDING - tagHeight / 2;
+                relativeTop = Math.max(minY, relativeTop);
+                relativeTop = Math.min(maxY, relativeTop);
+
+                // --- 边界检测结束 ---
+
+                tag.style.left = `${relativeLeft}px`;
+                tag.style.top = `${relativeTop}px`;
+            });
+
+            document.addEventListener('mouseup', () => {
+                if (isDragging) {
+                    isDragging = false;
+                    tag.style.zIndex = 10;
+                    
+                    const currentLeft = parseFloat(tag.style.left);
+                    const currentTop = parseFloat(tag.style.top);
+                    
+                    const tagData = findTagData(tag.id);
+                    if (tagData) {
+                        tagData.left = currentLeft;
+                        tagData.top = currentTop;
+                    }
+                    
+                    const coordX = currentLeft - (containerWidth / 2);
+                    const coordY = (containerHeight / 2) - currentTop; 
+                    console.log(`标签 ${tag.textContent} 的坐标: (${coordX.toFixed(0)}, ${coordY.toFixed(0)})`);
+                }
+            });
+        }
+
+
+        function initializeTags() {
+            tagsData = INITIAL_TAG_CONTENTS.map(content => {
+                const { left, top } = getInitialRandomPosition();
+                return {
+                    id: generateUniqueId(),
+                    content: content,
+                    left: left,
+                    top: top
+                };
+            });
+            
+            tagsData.forEach(renderNewCoordinateTag);
+            renderTagList();
+        }
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+            containerWidth = container.offsetWidth;
+            containerHeight = container.offsetHeight;
+
+            initializeTags();
+
+            // 单个添加事件
+            addTagBtn.addEventListener('click', handleAddTag);
+            newTagText.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    handleAddTag();
+                }
+            });
+
+            // 批量添加事件 (新增)
+            addBulkBtn.addEventListener('click', handleBulkAddTag);
+            bulkTagText.addEventListener('keydown', (e) => {
+                // 允许使用 Ctrl/Cmd + Enter 快速批量添加
+                if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+                    e.preventDefault();
+                    handleBulkAddTag();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
