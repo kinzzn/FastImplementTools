@@ -501,14 +501,6 @@
 
             initializeTags();
 
-            // 单个添加事件
-            addTagBtn.addEventListener('click', handleAddTag);
-            newTagText.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    handleAddTag();
-                }
-            });
-
             // 批量添加事件 (新增)
             addBulkBtn.addEventListener('click', handleBulkAddTag);
             bulkTagText.addEventListener('keydown', (e) => {
