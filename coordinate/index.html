@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -28,8 +29,8 @@
             border: 2px solid #333;
             position: relative;
             background-color: #ffffff;
-            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
-            overflow: hidden; 
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
             display: flex;
         }
 
@@ -47,6 +48,7 @@
             left: 50%;
             transform: translateX(-50%);
         }
+
         /* 2.2. 横轴 (X-axis) */
         #x-axis {
             width: 100%;
@@ -63,15 +65,15 @@
             padding: 5px 10px;
             line-height: normal;
             text-align: center;
-            border-radius: 8px; 
+            border-radius: 8px;
             background-color: #007bff;
             color: white;
             font-weight: bold;
             font-family: Arial, sans-serif;
             z-index: 10;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-            white-space: nowrap; 
-            transform: translate(-50%, -50%); 
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            white-space: nowrap;
+            transform: translate(-50%, -50%);
         }
 
         /* 4. 坐标轴标签 (Axis Labels) 样式 */
@@ -85,14 +87,35 @@
             border: 1px solid transparent;
             cursor: pointer;
         }
+
         .axis-label:focus {
             border: 1px dashed #007bff;
             outline: none;
         }
-        #label-y-pos { top: 5px; left: 50%; transform: translateX(-50%); }
-        #label-y-neg { bottom: 5px; left: 50%; transform: translateX(-50%); }
-        #label-x-neg { left: 5px; top: 50%; transform: translateY(-50%); }
-        #label-x-pos { right: 5px; top: 50%; transform: translateY(-50%); }
+
+        #label-y-pos {
+            top: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        #label-y-neg {
+            bottom: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        #label-x-neg {
+            left: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        #label-x-pos {
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
 
         /* 5. Tag 管理系统样式 - 简化设计 */
         #tag-system {
@@ -100,15 +123,16 @@
             padding: 20px;
             background-color: #fff;
             border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            display: flex; 
-            flex-direction: column; 
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
         }
-        
+
         /* 标签列表容器 */
         #tag-list-wrapper {
-            flex-grow: 1; 
-            overflow-y: auto; /* 允许列表过长时滚动 */
+            flex-grow: 1;
+            overflow-y: auto;
+            /* 允许列表过长时滚动 */
         }
 
         /* Tag 添加区域 - 单个添加 */
@@ -116,20 +140,23 @@
             display: flex;
             gap: 5px;
             padding-top: 10px;
-            border-top: 1px solid #eee; /* 分隔线 */
-            margin-bottom: 10px; /* 与下方批量添加区域的间距 */
+            border-top: 1px solid #eee;
+            /* 分隔线 */
+            margin-bottom: 10px;
+            /* 与下方批量添加区域的间距 */
         }
+
         #new-tag-text {
             flex-grow: 1;
             padding: 8px;
             border: 1px solid #ccc;
             border-radius: 4px;
         }
-        
+
         /* '+' 按钮样式 */
         #add-tag-btn {
             padding: 8px 15px;
-            background-color: #ddd; 
+            background-color: #ddd;
             color: #333;
             border: none;
             border-radius: 4px;
@@ -137,6 +164,7 @@
             font-size: 16px;
             font-weight: bold;
         }
+
         #add-tag-btn:hover {
             background-color: #ccc;
         }
@@ -147,18 +175,20 @@
             flex-direction: column;
             gap: 5px;
         }
+
         #bulk-tag-text {
             flex-grow: 1;
             padding: 8px;
             border: 1px solid #ccc;
             border-radius: 4px;
-            resize: vertical; 
+            resize: vertical;
             font-family: inherit;
-            height: 80px; 
+            height: 80px;
         }
+
         #add-bulk-btn {
             padding: 8px 15px;
-            background-color: #ddd; 
+            background-color: #ddd;
             color: #333;
             border: none;
             border-radius: 4px;
@@ -166,6 +196,7 @@
             font-size: 14px;
             font-weight: bold;
         }
+
         #add-bulk-btn:hover {
             background-color: #ccc;
         }
@@ -176,6 +207,7 @@
             padding: 0;
             margin: 0;
         }
+
         #tag-list-container li {
             display: flex;
             justify-content: space-between;
@@ -183,29 +215,63 @@
             padding: 8px 0;
             border-bottom: 1px dashed #eee;
         }
+
         #tag-list-container li:last-child {
             border-bottom: none;
         }
-        
+
         /* '-' 删除按钮样式 */
         .delete-btn {
-            background-color: transparent; 
-            color: #888; 
-            border: 1px solid #ddd; 
-            padding: 2px 8px; 
+            background-color: transparent;
+            color: #888;
+            border: 1px solid #ddd;
+            padding: 2px 8px;
             border-radius: 4px;
             cursor: pointer;
             font-size: 14px;
             line-height: 1.2;
-            width: 25px; 
+            width: 25px;
             text-align: center;
         }
+
         .delete-btn:hover {
             background-color: #f0f0f0;
             color: #333;
         }
+
+        @media (max-width: 768px) {
+
+            /* 1. 改变主容器布局为垂直堆叠 */
+            .page {
+                flex-direction: column;
+                align-items: center;
+                padding: 10px;
+                gap: 15px;
+            }
+
+            /* 2. 调整坐标系尺寸为正方形，并使用视口宽度 */
+            #coordinate-system {
+                width: 95vw;
+                max-width: 400px;
+                height: 95vw;
+                max-height: 400px;
+            }
+
+            /* 3. 调整标签管理系统尺寸 */
+            #tag-system {
+                width: 100%;
+                max-width: 400px;
+                padding: 15px;
+            }
+
+            /* 4. 减小批量输入框的高度 */
+            #bulk-tag-text {
+                height: 50px;
+            }
+        }
     </style>
 </head>
+
 <body>
     <div class="page">
         <div id="coordinate-system">
@@ -221,9 +287,9 @@
         <div id="tag-system">
             <div id="tag-list-wrapper">
                 <ul id="tag-list-container">
-                    </ul>
+                </ul>
             </div>
-            
+
             <div id="bulk-add-area">
                 <textarea id="bulk-tag-text" rows="4" placeholder="支持批量添加标签，每行一个。例如：
 标签F
@@ -233,298 +299,328 @@
             </div>
         </div>
     </div>
-  <script>
-    // --- 全局配置 ---
-    const INITIAL_TAG_CONTENTS = ['A', 'B'];
-    const BOUNDS_PADDING = 10; 
-    
-    // --- 状态数据 ---
-    let tagsData = []; 
-    
-    // --- DOM 元素 ---
-    const container = document.getElementById('coordinate-system');
-    const tagListContainer = document.getElementById('tag-list-container');
-    // 注意：原始HTML中移除了newTagText和addTagBtn，但逻辑中仍需要它们来初始化。
-    // 我们将使用 bulkTagText/addBulkBtn 作为示例，如果需要使用单个添加功能，请确保HTML中包含它们。
-    const bulkTagText = document.getElementById('bulk-tag-text'); 
-    const addBulkBtn = document.getElementById('add-bulk-btn');     
-    
-    let containerWidth = 0;
-    let containerHeight = 0;
+    <script>
+        // --- 全局配置 ---
+        const INITIAL_TAG_CONTENTS = ['A', 'B'];
+        const BOUNDS_PADDING = 10;
 
-    /**
-     * 生成一个三位数的不重复 ID 字符串
-     */
-    function generateUniqueId() {
-        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-        let id = '';
-        for (let i = 0; i < 3; i++) {
-            id += chars.charAt(Math.floor(Math.random() * chars.length));
+        // --- 状态数据 ---
+        let tagsData = [];
+
+        // --- DOM 元素 ---
+        const container = document.getElementById('coordinate-system');
+        const tagListContainer = document.getElementById('tag-list-container');
+        // 注意：原始HTML中移除了newTagText和addTagBtn，但逻辑中仍需要它们来初始化。
+        // 我们将使用 bulkTagText/addBulkBtn 作为示例，如果需要使用单个添加功能，请确保HTML中包含它们。
+        const bulkTagText = document.getElementById('bulk-tag-text');
+        const addBulkBtn = document.getElementById('add-bulk-btn');
+
+        let containerWidth = 0;
+        let containerHeight = 0;
+
+        /**
+         * 生成一个三位数的不重复 ID 字符串
+         */
+        function generateUniqueId() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let id = '';
+            for (let i = 0; i < 3; i++) {
+                id += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return 'tag-' + id;
         }
-        return 'tag-' + id;
-    }
 
-    /**
-     * 计算一个随机的、在拖动边界内的初始 CSS 位置
-     */
-    function getInitialRandomPosition() {
-        if (containerWidth === 0 || containerHeight === 0) {
-            // 默认值，以防容器尺寸未初始化
-            return { left: 450, top: 300 }; 
+        /**
+         * 计算一个随机的、在拖动边界内的初始 CSS 位置
+         */
+        function getInitialRandomPosition() {
+            // 确保在获取随机位置前更新尺寸
+            updateContainerDimensions();
+
+            if (containerWidth === 0 || containerHeight === 0) {
+                // 默认值，以防容器尺寸未初始化
+                return { left: 450, top: 300 };
+            }
+
+            const effectiveWidth = containerWidth - 2 * BOUNDS_PADDING;
+            const effectiveHeight = containerHeight - 2 * BOUNDS_PADDING;
+
+            const randX = Math.random() * effectiveWidth;
+            const randY = Math.random() * effectiveHeight;
+
+            const initialLeftPadded = BOUNDS_PADDING + randX;
+            const initialTopPadded = BOUNDS_PADDING + randY;
+
+            return { left: initialLeftPadded, top: initialTopPadded };
         }
-        
-        const effectiveWidth = containerWidth - 2 * BOUNDS_PADDING;
-        const effectiveHeight = containerHeight - 2 * BOUNDS_PADDING;
+        // 增加一个更新尺寸的函数，用于处理窗口大小调整
+        function updateContainerDimensions() {
+            containerWidth = container.offsetWidth;
+            containerHeight = container.offsetHeight;
+        }
 
-        const randX = Math.random() * effectiveWidth;
-        const randY = Math.random() * effectiveHeight;
+        /**
+         * 渲染一个新的标签到坐标系中 (只用于新增标签)
+         */
+        function renderNewCoordinateTag(data) {
+            const tag = document.createElement('div');
+            tag.className = 'tag';
+            tag.id = data.id;
+            tag.textContent = data.content;
 
-        const initialLeftPadded = BOUNDS_PADDING + randX;
-        const initialTopPadded = BOUNDS_PADDING + randY;
+            tag.style.left = `${data.left}px`;
+            tag.style.top = `${data.top}px`;
 
-        return { left: initialLeftPadded, top: initialTopPadded };
-    }
-    
-    /**
-     * 渲染一个新的标签到坐标系中 (只用于新增标签)
-     */
-    function renderNewCoordinateTag(data) {
-        const tag = document.createElement('div');
-        tag.className = 'tag';
-        tag.id = data.id;
-        tag.textContent = data.content;
+            container.appendChild(tag);
 
-        tag.style.left = `${data.left}px`;
-        tag.style.top = `${data.top}px`;
-        
-        container.appendChild(tag);
-        
-        makeDraggable(tag);
-    }
+            makeDraggable(tag);
+        }
 
-    /**
-     * 渲染 tag-system 中的标签列表
-     */
-    function renderTagList() {
-        tagListContainer.innerHTML = '';
-        tagsData.forEach(data => {
-            const li = document.createElement('li');
-            li.innerHTML = `
+        /**
+         * 渲染 tag-system 中的标签列表
+         */
+        function renderTagList() {
+            tagListContainer.innerHTML = '';
+            tagsData.forEach(data => {
+                const li = document.createElement('li');
+                li.innerHTML = `
                 <span>${data.content}</span>
                 <button class="delete-btn" data-tag-id="${data.id}">x</button>
-            `; 
-            tagListContainer.appendChild(li);
-        });
-        
-        document.querySelectorAll('.delete-btn').forEach(button => {
-            button.addEventListener('click', handleDeleteTag);
-        });
-    }
+            `;
+                tagListContainer.appendChild(li);
+            });
 
-    /**
-     * 批量添加标签的处理器 
-     */
-    function handleBulkAddTag() {
-        const content = bulkTagText.value.trim();
-        if (content === '') {
-            alert('批量标签内容不能为空！');
-            return;
+            document.querySelectorAll('.delete-btn').forEach(button => {
+                button.addEventListener('click', handleDeleteTag);
+            });
         }
 
-        const lines = content.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+        /**
+         * 批量添加标签的处理器 
+         */
+        function handleBulkAddTag() {
+            const content = bulkTagText.value.trim();
+            if (content === '') {
+                alert('批量标签内容不能为空！');
+                return;
+            }
 
-        if (lines.length === 0) {
-            alert('请输入有效的标签内容，每行一个。');
-            return;
+            const lines = content.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+
+            if (lines.length === 0) {
+                alert('请输入有效的标签内容，每行一个。');
+                return;
+            }
+
+            let newTagsAdded = 0;
+            lines.forEach(tagContent => {
+                if (tagContent.length === 0) return;
+
+                const newId = generateUniqueId();
+                const position = getInitialRandomPosition();
+
+                const newTagData = {
+                    id: newId,
+                    content: tagContent,
+                    left: position.left,
+                    top: position.top
+                };
+
+                tagsData.push(newTagData);
+                renderNewCoordinateTag(newTagData);
+                newTagsAdded++;
+            });
+
+            if (newTagsAdded > 0) {
+                renderTagList();
+                bulkTagText.value = '';
+            }
         }
 
-        let newTagsAdded = 0;
-        lines.forEach(tagContent => {
-            if (tagContent.length === 0) return;
+        /**
+         * 删除标签的处理器
+         */
+        function handleDeleteTag(e) {
+            const tagId = e.target.getAttribute('data-tag-id');
 
-            const newId = generateUniqueId();
-            const position = getInitialRandomPosition();
-            
-            const newTagData = { 
-                id: newId, 
-                content: tagContent, 
-                left: position.left,
-                top: position.top
-            };
-            
-            tagsData.push(newTagData);
-            renderNewCoordinateTag(newTagData); 
-            newTagsAdded++;
-        });
-        
-        if (newTagsAdded > 0) {
+            document.getElementById(tagId)?.remove();
+
+            tagsData = tagsData.filter(tag => tag.id !== tagId);
+
             renderTagList();
-            bulkTagText.value = ''; 
         }
-    }
 
-    /**
-     * 删除标签的处理器
-     */
-    function handleDeleteTag(e) {
-        const tagId = e.target.getAttribute('data-tag-id');
-        
-        document.getElementById(tagId)?.remove();
-        
-        tagsData = tagsData.filter(tag => tag.id !== tagId);
-        
-        renderTagList();
-    }
-
-    // --- 新增：统一获取坐标的函数 ---
-    function getEventCoordinates(e) {
-        // 检查是否是触摸事件，如果是，则获取第一个触摸点
-        if (e.touches && e.touches.length > 0) {
+        // --- 新增：统一获取坐标的函数 ---
+        function getEventCoordinates(e) {
+            // 检查是否是触摸事件，如果是，则获取第一个触摸点
+            if (e.touches && e.touches.length > 0) {
+                return {
+                    clientX: e.touches[0].clientX,
+                    clientY: e.touches[0].clientY
+                };
+            }
+            // 否则视为鼠标事件
             return {
-                clientX: e.touches[0].clientX,
-                clientY: e.touches[0].clientY
+                clientX: e.clientX,
+                clientY: e.clientY
             };
         }
-        // 否则视为鼠标事件
-        return {
-            clientX: e.clientX,
-            clientY: e.clientY
-        };
-    }
 
-    /**
-     * 使单个标签可拖动 (支持鼠标和触摸)
-     */
-    function makeDraggable(tag) {
-        let isDragging = false;
-        let offsetX, offsetY;
-        
-        const findTagData = (id) => tagsData.find(d => d.id === id);
+        /**
+         * 使单个标签可拖动 (支持鼠标和触摸)
+         */
+        function makeDraggable(tag) {
+            let isDragging = false;
+            let offsetX, offsetY;
 
-        // --- 核心拖动逻辑 ---
-        const startDrag = (e) => {
-            // 阻止默认行为（如滚动），只在触摸事件中需要
-            if (e.type.startsWith('touch')) {
-                e.preventDefault();
-            }
+            const findTagData = (id) => tagsData.find(d => d.id === id);
 
-            isDragging = true;
-            tag.style.zIndex = 100;
-            
-            const coords = getEventCoordinates(e);
-            
-            // 计算鼠标/触摸点相对于标签左上角的偏移
-            offsetX = coords.clientX - tag.getBoundingClientRect().left;
-            offsetY = coords.clientY - tag.getBoundingClientRect().top;
-
-            // 绑定拖动和结束事件到 document
-            document.addEventListener('mousemove', drag, { passive: false });
-            document.addEventListener('mouseup', endDrag);
-            document.addEventListener('touchmove', drag, { passive: false });
-            document.addEventListener('touchend', endDrag);
-        };
-
-        const drag = (e) => {
-            if (!isDragging) return;
-
-            // 阻止默认行为（如滚动），只在触摸事件中需要
-            if (e.type.startsWith('touch')) {
-                e.preventDefault();
-            }
-
-            const coords = getEventCoordinates(e);
-
-            let newLeft = coords.clientX - offsetX;
-            let newTop = coords.clientY - offsetY;
-
-            const containerRect = container.getBoundingClientRect();
-            let relativeLeft = newLeft - containerRect.left;
-            let relativeTop = newTop - containerRect.top;
-            
-            const tagWidth = tag.offsetWidth;
-            const tagHeight = tag.offsetHeight;
-
-            // --- 边界检测 ---
-            const minX = BOUNDS_PADDING + tagWidth / 2;
-            const maxX = containerWidth - BOUNDS_PADDING - tagWidth / 2;
-            relativeLeft = Math.max(minX, relativeLeft);
-            relativeLeft = Math.min(maxX, relativeLeft);
-            
-            const minY = BOUNDS_PADDING + tagHeight / 2;
-            const maxY = containerHeight - BOUNDS_PADDING - tagHeight / 2;
-            relativeTop = Math.max(minY, relativeTop);
-            relativeTop = Math.min(maxY, relativeTop);
-            // --- 边界检测结束 ---
-
-            tag.style.left = `${relativeLeft}px`;
-            tag.style.top = `${relativeTop}px`;
-        };
-
-        const endDrag = () => {
-            if (isDragging) {
-                isDragging = false;
-                tag.style.zIndex = 10;
-                
-                // 移除事件监听器
-                document.removeEventListener('mousemove', drag);
-                document.removeEventListener('mouseup', endDrag);
-                document.removeEventListener('touchmove', drag);
-                document.removeEventListener('touchend', endDrag);
-                
-                const currentLeft = parseFloat(tag.style.left);
-                const currentTop = parseFloat(tag.style.top);
-                
-                const tagData = findTagData(tag.id);
-                if (tagData) {
-                    tagData.left = currentLeft;
-                    tagData.top = currentTop;
+            // --- 核心拖动逻辑 ---
+            const startDrag = (e) => {
+                // 阻止默认行为（如滚动），只在触摸事件中需要
+                if (e.type.startsWith('touch')) {
+                    e.preventDefault();
                 }
-                
-                const coordX = currentLeft - (containerWidth / 2);
-                const coordY = (containerHeight / 2) - currentTop; 
-                console.log(`标签 ${tag.textContent} 的坐标: (${coordX.toFixed(0)}, ${coordY.toFixed(0)})`);
-            }
-        };
-        
-        // 绑定鼠标事件
-        tag.addEventListener('mousedown', startDrag);
-        // 绑定触摸事件
-        tag.addEventListener('touchstart', startDrag, { passive: false });
-    }
-    // --- 逻辑函数保持不变 ---
+                // 确保在开始拖动时，尺寸是最新的
+                updateContainerDimensions();
 
 
-    function initializeTags() {
-        tagsData = INITIAL_TAG_CONTENTS.map(content => {
-            const { left, top } = getInitialRandomPosition();
-            return {
-                id: generateUniqueId(),
-                content: content,
-                left: left,
-                top: top
+                isDragging = true;
+                tag.style.zIndex = 100;
+
+                const coords = getEventCoordinates(e);
+
+                // 计算鼠标/触摸点相对于标签左上角的偏移
+                offsetX = coords.clientX - tag.getBoundingClientRect().left;
+                offsetY = coords.clientY - tag.getBoundingClientRect().top;
+
+                // 绑定拖动和结束事件到 document
+                document.addEventListener('mousemove', drag, { passive: false });
+                document.addEventListener('mouseup', endDrag);
+                document.addEventListener('touchmove', drag, { passive: false });
+                document.addEventListener('touchend', endDrag);
             };
+
+            const drag = (e) => {
+                if (!isDragging) return;
+
+                // 阻止默认行为（如滚动），只在触摸事件中需要
+                if (e.type.startsWith('touch')) {
+                    e.preventDefault();
+                }
+
+                const coords = getEventCoordinates(e);
+
+                let newLeft = coords.clientX - offsetX;
+                let newTop = coords.clientY - offsetY;
+
+                const containerRect = container.getBoundingClientRect();
+                let relativeLeft = newLeft - containerRect.left;
+                let relativeTop = newTop - containerRect.top;
+
+                const tagWidth = tag.offsetWidth;
+                const tagHeight = tag.offsetHeight;
+
+                // --- 边界检测 ---
+                const minX = BOUNDS_PADDING + tagWidth / 2;
+                const maxX = containerWidth - BOUNDS_PADDING - tagWidth / 2;
+                relativeLeft = Math.max(minX, relativeLeft);
+                relativeLeft = Math.min(maxX, relativeLeft);
+
+                const minY = BOUNDS_PADDING + tagHeight / 2;
+                const maxY = containerHeight - BOUNDS_PADDING - tagHeight / 2;
+                relativeTop = Math.max(minY, relativeTop);
+                relativeTop = Math.min(maxY, relativeTop);
+                // --- 边界检测结束 ---
+
+                tag.style.left = `${relativeLeft}px`;
+                tag.style.top = `${relativeTop}px`;
+            };
+
+            const endDrag = () => {
+                if (isDragging) {
+                    isDragging = false;
+                    tag.style.zIndex = 10;
+
+                    // 移除事件监听器
+                    document.removeEventListener('mousemove', drag);
+                    document.removeEventListener('mouseup', endDrag);
+                    document.removeEventListener('touchmove', drag);
+                    document.removeEventListener('touchend', endDrag);
+
+                    const currentLeft = parseFloat(tag.style.left);
+                    const currentTop = parseFloat(tag.style.top);
+
+                    const tagData = findTagData(tag.id);
+                    if (tagData) {
+                        tagData.left = currentLeft;
+                        tagData.top = currentTop;
+                    }
+
+                    const coordX = currentLeft - (containerWidth / 2);
+                    const coordY = (containerHeight / 2) - currentTop;
+                    console.log(`标签 ${tag.textContent} 的坐标: (${coordX.toFixed(0)}, ${coordY.toFixed(0)})`);
+                }
+            };
+
+            // 绑定鼠标事件
+            tag.addEventListener('mousedown', startDrag);
+            // 绑定触摸事件
+            tag.addEventListener('touchstart', startDrag, { passive: false });
+        }
+        // --- 逻辑函数保持不变 ---
+
+
+        function initializeTags() {
+            tagsData = INITIAL_TAG_CONTENTS.map(content => {
+                const { left, top } = getInitialRandomPosition();
+                return {
+                    id: generateUniqueId(),
+                    content: content,
+                    left: left,
+                    top: top
+                };
+            });
+
+            tagsData.forEach(renderNewCoordinateTag);
+            renderTagList();
+        }
+        // 新增：处理窗口大小调整事件
+        function handleResize() {
+            // 重新计算容器尺寸
+            updateContainerDimensions();
+
+            // 重新计算并设置每个标签的位置 (使其在新的坐标系中保持相对位置)
+            tagsData.forEach(data => {
+                const tagElement = document.getElementById(data.id);
+                if (tagElement) {
+                    // 这里的逻辑是假设标签应该自动调整到新的随机位置，
+                    // 但更合理的做法是在 resize 时保持其相对于中心点的比例位置，
+                    // 不过由于您代码中没有保存比例，最简单的处理是重新获取尺寸。
+                    // 暂时只更新尺寸，不移动已有的标签，避免复杂性增加。
+                    // 关键在于，拖动逻辑中使用了最新的 containerWidth/Height。
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // 初始化时获取一次尺寸
+            updateContainerDimensions();
+
+            initializeTags();
+
+            // 批量添加事件
+            addBulkBtn.addEventListener('click', handleBulkAddTag);
+            bulkTagText.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+                    e.preventDefault();
+                    handleBulkAddTag();
+                }
+            });
+            // 监听窗口大小调整事件，以在设备旋转时更新尺寸
+            window.addEventListener('resize', handleResize);
         });
-        
-        tagsData.forEach(renderNewCoordinateTag);
-        renderTagList();
-    }
-
-
-    document.addEventListener('DOMContentLoaded', () => {
-        containerWidth = container.offsetWidth;
-        containerHeight = container.offsetHeight;
-
-        initializeTags();
-
-        // 批量添加事件
-        addBulkBtn.addEventListener('click', handleBulkAddTag);
-        bulkTagText.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
-                e.preventDefault();
-                handleBulkAddTag();
-            }
-        });
-    });
-</script>
+    </script>
 </body>
+
 </html>
