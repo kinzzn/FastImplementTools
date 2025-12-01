@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, memo } from 'react';
+import React, { useState, useEffect, useCallback, memo, type JSX } from 'react';
 import { v4 as uuidv4 } from 'uuid'; // 引入 uuid 用于生成唯一ID
 
 // ------------------------- 1. 类型定义 -------------------------
@@ -18,11 +18,13 @@ type DuelPair = [Album, Album | null];
 type DuelPairs = DuelPair[];
 
 // 阶段枚举
-enum STAGE {
-    INPUT = 'input',
-    DUEL = 'duel',
-    RESULT = 'result',
-}
+const STAGE = {
+    INPUT: 'input',
+    DUEL: 'duel',
+    RESULT: 'result',
+} as const;
+
+type STAGE = typeof STAGE[keyof typeof STAGE];
 
 // ------------------------- 2. DuelArena 辅助函数 -------------------------
 
@@ -149,6 +151,7 @@ function DuelArena({ albums, onPoolUpdate, onFinish, targetSize }: DuelArenaProp
 
         // 只有当对决列表为空，且当前专辑池大于目标大小时，才开始新的一轮配对
         if (currentPairs.length === 0) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setCurrentPairs(pairAlbums(albums));
             setWinners([]); // 新一轮，清空胜者
             console.log(`Round ${round} Starts. Albums: ${albums.length}. Duels: ${Math.ceil(albums.length / 2)}`);
@@ -303,7 +306,7 @@ function AlbumInput({ onSubmit }: AlbumInputProps): JSX.Element {
 const TARGET_TOP_SIZE = 10;
 
 export default function App(): JSX.Element {
-    const [allAlbums, setAllAlbums] = useState<AlbumPool>([]);
+    const [, setAllAlbums] = useState<AlbumPool>([]);
     const [currentPool, setCurrentPool] = useState<AlbumPool>([]);
     const [currentStage, setCurrentStage] = useState<STAGE>(STAGE.INPUT);
     

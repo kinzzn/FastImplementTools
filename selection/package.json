@@ -8,7 +8,9 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "predeploy": "npm run build",
+    "init-tailwind": "tailwindcss init -p",
+    "copy-static": "copyfiles -u 1 coordinate/coordinate.html dist",
+    "predeploy": "npm run build && npm run copy-static",
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
@@ -24,6 +26,7 @@
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.1",
     "autoprefixer": "^10.4.22",
+    "copyfiles": "^2.4.1",
     "eslint": "^9.39.1",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.24",
