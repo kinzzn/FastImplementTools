@@ -1,6 +1,6 @@
 const domain = 'https://api.spotify.com';
 const userID = '31wvg3jmhyykuwyfc2ln2g4y5fgi';
-const token = document.getElementById('token').innerText
+let token = localStorage.getItem('access_token') || document.getElementById('token').innerText
 const month = document.getElementById('month').innerText
 
 const YEAR = 2025;
@@ -14,6 +14,32 @@ let albumPlaylist = []
 let singlePlaylist = []
 const TIMEOUT = 3000;
 
+const getRefreshToken = async () => {
+
+   // refresh token that has been previously stored
+   const refreshToken = localStorage.getItem('refresh_token');
+   const url = "https://accounts.spotify.com/api/token";
+
+    const payload = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: new URLSearchParams({
+        grant_type: 'refresh_token',
+        refresh_token: refreshToken,
+        client_id: clientId
+      }),
+    }
+    const body = await fetch(url, payload);
+    const response = await body.json();
+
+    localStorage.setItem('access_token', response.access_token);
+    if (response.refresh_token) {
+      localStorage.setItem('refresh_token', response.refresh_token);
+    }
+  }
+
 async function fetchApi(endpoint, method, body = {}) {
     const config = {
         headers: {
@@ -25,7 +51,20 @@ async function fetchApi(endpoint, method, body = {}) {
         config.headers["Content-Type"] = "application/json";
         config.body = JSON.stringify(body);
     }
-    const res = await fetch(`${domain}/${endpoint}`, config);
+    
+    let res = await fetch(`${domain}/${endpoint}`, config);
+    
+    // If token expired (401), refresh and retry
+    if (res.status === 401) {
+        console.log('Token expired, refreshing...');
+        await getRefreshToken();
+        token = localStorage.getItem('access_token');
+        
+        // Retry the request with new token
+        config.headers.Authorization = `Bearer ${token}`;
+        res = await fetch(`${domain}/${endpoint}`, config);
+    }
+    
     return await res.json();
 }
 

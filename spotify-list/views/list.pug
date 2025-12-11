@@ -11,4 +11,11 @@ html(lang='en')
     br
     br
     p#token #{token}
+    p#refreshToken(style="display:none;") #{refreshToken}
+    script.
+      // Store tokens in localStorage on page load
+      const accessToken = document.getElementById('token').innerText;
+      const refreshToken = document.getElementById('refreshToken').innerText;
+      localStorage.setItem('access_token', accessToken);
+      localStorage.setItem('refresh_token', refreshToken);
     

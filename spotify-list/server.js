@@ -47,7 +47,8 @@ app.get('/home', (req, res) => {
     request.post(authOptions, async function (error, response, body) {
         if (!error && response.statusCode === 200) {
             var token = body.access_token;
-            res.render('list', { token, month: process.env.MONTH });
+            var refreshToken = body.refresh_token;
+            res.render('list', { token, refreshToken, month: process.env.MONTH });
         } else {
             console.log(response.statusCode)
             console.log(error)
